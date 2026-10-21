@@ -7,28 +7,28 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class StatisticsDisplay implements Observer, DisplayElement {
-    private float maxTemp = 0.0f;
-    private float minTemp = 200;
+    private float maxTemp = Float.NEGATIVE_INFINITY;
+    private float minTemp = Float.POSITIVE_INFINITY;
     private float tempSum = 0.0f;
-    private int numReadings;
-    private WeatherData weatherData;
+    private int numReadings = 0;
+    private final WeatherData weatherData;
 
     private final static Logger LOGGER= LogManager.getLogger(StatisticsDisplay.class);
 
     public StatisticsDisplay(WeatherData weatherData) {
         this.weatherData = weatherData;
-        weatherData.registerObserver(this);
     }
 
     @Override
-    public void update(float temperature, float humidity, float pressure) {
-        tempSum += temperature;
+    public void update() {
+        float temp = weatherData.getTemperature();
+        tempSum += temp;
         numReadings++;
-        if (temperature > maxTemp) {
-            maxTemp = temperature;
+        if (temp > maxTemp) {
+            maxTemp = temp;
         }
-        if (temperature < minTemp) {
-            minTemp = temperature;
+        if (temp < minTemp) {
+            minTemp = temp;
         }
         display();
     }

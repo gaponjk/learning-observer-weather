@@ -6,13 +6,12 @@ import com.haponenka.app.subject.Subject;
 import java.util.ArrayList;
 
 public class WeatherData implements Subject {
-    private final ArrayList<Observer> observers;
-    private float temp;
+    private final ArrayList<Observer> observers=new ArrayList<>();
+    private float temperature;
     private float humidity;
     private float pressure;
 
     public WeatherData() {
-        observers=new ArrayList<>();
     }
 
     @Override
@@ -27,18 +26,30 @@ public class WeatherData implements Subject {
 
     @Override
     public void notifyObservers() {
-        observers.forEach(o->o.update(temp,humidity,pressure));
+        observers.forEach(Observer::update);
     }
 
     public void measurementsChanged(){
         notifyObservers();
     }
 
-    public void setMeasurements(float temp, float humidity, float pressure){
-        this.temp = temp;
+    public void setMeasurements(float temperature, float humidity, float pressure){
+        this.temperature = temperature;
         this.humidity = humidity;
         this.pressure = pressure;
         measurementsChanged();
+    }
+
+    public float getTemperature() {
+        return temperature;
+    }
+
+    public float getHumidity() {
+        return humidity;
+    }
+
+    public float getPressure() {
+        return pressure;
     }
 
 }

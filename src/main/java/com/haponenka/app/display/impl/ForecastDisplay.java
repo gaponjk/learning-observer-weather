@@ -9,20 +9,19 @@ import org.apache.logging.log4j.Logger;
 public class ForecastDisplay implements Observer, DisplayElement {
     private float currentPressure = 29.92f;
     private float lastPressure;
-    private WeatherData weatherData;
+    private final WeatherData weatherData;
 
     private final static Logger LOGGER= LogManager.getLogger(ForecastDisplay.class);
 
 
     public ForecastDisplay(WeatherData weatherData) {
         this.weatherData = weatherData;
-        weatherData.registerObserver(this);
     }
 
     @Override
-    public void update(float temperature, float humidity, float pressure) {
+    public void update() {
         lastPressure = currentPressure;
-        currentPressure = pressure;
+        currentPressure = weatherData.getPressure();
 
         display();
     }
@@ -32,7 +31,7 @@ public class ForecastDisplay implements Observer, DisplayElement {
         String forecast;
         if (currentPressure > lastPressure) {
             forecast = "Improving weather on the way!";
-        } else if (currentPressure == lastPressure) {
+        } else if (Float.compare(currentPressure,lastPressure) == 0) {
             forecast = "More of the same";
         } else {
             forecast = "Watch out for cooler, rainy weather";
